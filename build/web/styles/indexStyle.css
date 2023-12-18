@@ -1,0 +1,26 @@
+body {
+    background-color: #252422;
+    font-family: 'Afacad', sans-serif;
+    color: white;
+
+}
+
+h1 {
+    text-align: center;
+    margin-top: 5vh;
+    margin-bottom: 30px;
+}
+
+h2 {
+    color: #F0A200;
+    margin-left: 2vh;
+}
+
+ul {
+    font-size: 18px;
+    margin-left: 5vh;
+}
+
+li {
+    margin-bottom: 10px;
+}
