@@ -12,6 +12,8 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Extra Sistemas Distribuidos</title>
+        <link rel="stylesheet" href="./style/indexstyle.css">
+        <link href="https://fonts.googleapis.com/css2?family=Afacad&family=Inter&display=swap" rel="stylesheet">
         <script type="text/javascript">
             function procesarLista(objetos) {
                 let jsonArray = JSON.parse(objetos);
