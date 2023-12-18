@@ -27,7 +27,14 @@ public class Server {
             System.out.println("Registrando objeto en el registro con nombre 'Info'");
             registry.rebind("Info", obj);
 
-            System.out.println("Servidor Iniciado en el puerto 4000");
+            System.out.println("Servidor RMI Iniciado en el puerto 4000");
+            
+            //System.out.println("Creando objeto WebSocketServer");
+            //WebSocketServer serv = new WebSocketServer();
+            
+            //System.out.println("Iniciando servidor del WebSocket en el puerto 1234");
+            //serv.startServer(); 
+            
         } catch (Exception e) {
             e.printStackTrace();
         }

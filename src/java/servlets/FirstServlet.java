@@ -23,6 +23,8 @@ import javax.servlet.RequestDispatcher;
 import server.UserSystemInfo;
 import server.SystemInfoInterface;
 
+import server.sockets.WebSocketEndpoint;
+
 /**
  *
  * @author UrielC
@@ -41,7 +43,7 @@ public class FirstServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         RequestDispatcher dispatcher = request.getRequestDispatcher("/JSP/index.jsp");
         dispatcher.forward(request, response);
 
@@ -54,32 +56,43 @@ public class FirstServlet extends HttpServlet {
         StringBuilder stringBuilder = new StringBuilder();
         String clientIpAddress = request.getRemoteAddr();
 
-        String line;
-        while ((line = reader.readLine()) != null) {
-            stringBuilder.append(line);
-        }
-
-        // Convertir la cadena JSON a objetos Java, si es aplicable
-        String jsonString = stringBuilder.toString();
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        UserSystemInfo datos = objectMapper.readValue(jsonString, UserSystemInfo.class);
-
-        datos.setIpAddress(clientIpAddress);
-        /*long memoryInfoTotal = datos.getMemoryInfoTotal();
-        long memoryInfoUsed = datos.getMemoryInfoUsed();
-        int processorInfo = datos.getProcessorInfo();
-        int usedSpace = datos.getUsedSpace();*/
+        
         try {
-            Registry registry = LocateRegistry.getRegistry("localhost", 4000);
-            SystemInfoInterface info = (SystemInfoInterface) registry.lookup("Info");
-            info.addData(datos);
-            //String [] allData = info.getData();
-        } catch (Exception e) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                stringBuilder.append(line);
+            }
+
+            // Convertir la cadena JSON a objetos Java, si es aplicable
+            String jsonString = stringBuilder.toString();
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            UserSystemInfo datos = objectMapper.readValue(jsonString, UserSystemInfo.class);
+
+            datos.setIpAddress(clientIpAddress);
+            long memoryInfoTotal = datos.getMemoryInfoTotal();
+            long memoryInfoUsed = datos.getMemoryInfoUsed();
+            int processorInfo = datos.getProcessorInfo();
+            int usedSpace = datos.getUsedSpace();
+            String ipAddress = datos.getIpAddress();
+
+            // Cerrar el BufferedReader después de su uso
+            reader.close();
+
+            try {
+                Registry registry = LocateRegistry.getRegistry("localhost", 4000);
+                SystemInfoInterface info = (SystemInfoInterface) registry.lookup("Info");
+                info.addData(datos);
+                
+                WebSocketEndpoint.broadcast(objectMapper.writeValueAsString(datos));
+                
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        } catch (IOException e) {
             e.printStackTrace();
         }
-
-        //System.out.println("Datos recibidos en formato JSON: " + jsonString);
     }
 
     @Override
